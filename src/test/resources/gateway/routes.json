@@ -1,0 +1,102 @@
+{
+  "version": "0.1.6",
+  "services": {
+    "eulixspace-applet-service": {
+      "applet_get_deploy_image_info": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://localhost:8081/space/v1/api/applet/deploy/imageInfo"
+      },
+      "applet_search_deploy_images": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://localhost:8081/space/v1/api/applet/deploy/searchImages"
+      },
+      "applet_deploy_image": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://localhost:8081/space/v1/api/applet/deploy/image"
+      },
+      "applet_get_deploy_transaction": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://localhost:8081/space/v1/api/applet/deploy/transaction"
+      }
+    },
+    "test-service": {
+      "download": {
+        "type": "download",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://localhost:8081/space/hello/download"
+      },
+      "upload": {
+        "type": "upload",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://localhost:8081/space/hello/upload"
+      },
+      "upload-one": {
+        "type": "upload",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://localhost:8081/space/hello/upload-one",
+        "ext-protocol": "onepart"
+      },
+      "greeting": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://localhost:8081/space/hello"
+      }
+    },
+    "eulixspace-account-service": {
+      "admin_get_dev-options_switch": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://localhost:8081/space/v1/api/admin/dev-options/switch"
+      },
+      "admin_update_dev-options_switch": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://localhost:8081/space/v1/api/admin/dev-options/switch"
+      },
+      "auth_totp_bkey": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://localhost:8081/space/v1/api/auth/totp/bkey"
+      },
+      "auth_totp_auth-code": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://localhost:8081/space/v1/api/auth/totp/auth-code"
+      },
+      "auth_totp_secret_generate": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://localhost:8081/space/v1/api/auth/totp/secret/generate"
+      },
+      "auth_totp_bkey_poll": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://localhost:8081/space/v1/api/auth/totp/bkey/poll"
+      },
+      "auth_totp_bkey_verify": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://localhost:8081/space/v1/api/auth/totp/bkey/verify"
+      }
+    }
+  }
+}

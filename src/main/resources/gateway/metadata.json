@@ -1,0 +1,14 @@
+{
+  "version": "0.3.0",
+  "scopes": {
+    "addressbook_read": "used to read addressbook data",
+    "addressbook_write": "used to write addressbook data",
+    "addressbook_config": "used to config addressbook service",
+    "userinfo_read": "used to read user's information(like identity)"
+  },
+  "categories": {
+    "addressbook": ["addressbook_read", "addressbook_write", "addressbook_config"],
+    "addressbook-readonly": ["addressbook_read"],
+    "userinfo-readonly": ["userinfo_read"]
+  }
+}

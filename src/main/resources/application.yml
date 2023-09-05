@@ -1,0 +1,336 @@
+# Copyright (c) 2022 Institute of Software Chinese Academy of Sciences (ISCAS)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Configuration file
+# Ref: https://quarkus.io/guides/config-reference
+# Ref: https://quarkus.io/guides/all-config
+# Ref: https://quarkus.io/guides/writing-native-applications-tip
+
+quarkus:
+  http:
+    root-path: /space
+    read-timeout: 60S
+    limits:
+      max-body-size: 1G
+    body:
+      handle-file-uploads: false
+  ssl:
+    native: true
+  swagger-ui: #### 上线前删除!
+    always-include: true
+  quartz:
+    start-mode: forced
+  flyway:
+    migrate-at-start: true
+    baseline-on-migrate: true
+    repair-at-start: true
+    ignore-missing-migrations: true
+  hibernate-orm:
+    log:
+      sql: true
+  smallrye-jwt:
+    enabled: false # without using smallrye's token verification, we will verify manually.
+  redis:
+    timeout: 70s
+  native:
+    resources:
+      includes: gateway/**,box/**,client/**,db/**,image/**,smime/**
+  rest-client:
+    device-storage-api:
+      url: ${APP_ACCOUNT_SYSTEM_AGENT_URL_DEVICE_INFO:${app.system-agent.url}+/device/info}
+    account-api:
+      url: ${APP_ACCOUNT_URL:${app.account.url}}
+    ssplatform-api:
+      url: ${APP_SSPLATFORM_URL:${app.ssplatform.url}}
+    psplatform-api:
+      url: ${APP_PSPLATFORM_URL:${app.psplatform.url}}
+    file-api:
+      url: ${APP_FILEAPI_URL:${app.file-api.url}}
+    radicale-api:
+      url: ${APP_RADICALE_API_URL:${app.radicale-api.url}}
+    security-api:
+      url: ${APP_SECURITY_API_URL:${app.security-api.url}}
+    appsign-api:
+      url: ${APP_APPSTORE_APPSIGN_URL:${app.appstore.appsign.url}}
+    appstore-api:
+      url: ${APP_APPSTORE_APPAPI_URL:${app.appstore.appapi.url}}
+    vod-api:
+      url: ${APP_VOD_URL:${app.vod.url}}
+    system-agent-api:
+      url: ${APP_SYSTEM_AGENT_URL_BASE:${app.system-agent.url.base}}
+    deploy-api:
+      url: ${APP_DEPLOY_API_URL:${app.deploy-api.url}}
+    dockerhub-api:
+      url: ${DOCKER_HUB_URL:${app.dockerhub.url}
+
+app:
+  version: 1.0.0
+  box:
+    uuid: c8d32cf3fe7730a8f9b7587e0ae03a8a959217e405f183f08f5e5129ac46bc48
+    btid: btid-test
+    keyfingerprint: d39b4fb9dd0f2180801f717e9427caea
+    username: testuser
+    endpoint: auth.ao.space
+    public-key:
+      location: /META-INF/resources/box/publicKey.pem
+    private-key:
+      location: /box/privateKey.pem
+    smime-sign:
+      location:
+        pem: smime/apple.pem
+        p12: smime/root.p12
+
+    version: 1.0.9
+    name: ao-space
+    pkg:
+      name: space.ao.server
+    type: box
+    support:
+      security:
+        mode: default # default/chip
+        chip:
+          ~: false
+          key: true
+          unix-socket: true
+    deploy:
+      method: PhysicalBox
+    device:
+      model:
+        number: 200
+  client:
+    public-key:
+      location: /client/publicKey.pem
+    private-key:
+      location: /client/privateKey.pem
+  gateway:
+    routers:
+      location: /gateway/routes.json
+    metadata:
+      location: /gateway/metadata.json
+    http-client:
+      read-timeout: 60S
+      write-timeout: 60S
+    auth:
+      time-of-ak-life: P16D
+      time-of-rak-life: P31D
+      login:
+        time-of-qr-ak-life: P1D
+        time-of-allow-automatic-login: P15D
+        time-of-allow-login: P30D
+      alg-info:
+        publicKey:
+          algorithm: RSA
+          keySize: 2048
+        signature:
+          algorithm: SHA256withRSA
+        transportation:
+          algorithm: AES
+          keySize: 32 # secret key 16 bytes for AES 128(bits) or 32 bytes for AES 256 (bits)
+          transformation: AES/CBC/PKCS5PADDING
+
+    security:
+      passwd:
+        time-of-ak-life: PT10M
+        #### time-of-ak-life: P90D # 产品需求(10分钟): PT10M, 上线前修改 ! 可以改成 90天便于测试时不过期
+        modify-take-effect-for-new-app: PT24H
+      email:
+        time-of-ak-life: PT10M
+        #### time-of-ak-life: P90D # 产品需求(10分钟): PT10M, 上线前修改 ! 可以改成 90天便于测试时不过期
+      email-provider:
+        configuration-file:
+          location: /gateway/emails_conf.json
+    file:
+      system:
+        location: /mnt/d/website/media/
+      api-url:
+    cron:
+      cache-clean:
+        clean-expired-ak: P7D # 每七天清理一次过期的 ak
+    log:
+      file:
+        path: ${quarkus.log.file.path}
+  ssplatform:
+    api-resources:
+      location: /platform/api/servicesapi.json
+    url: https://services.eulix.xyz
+    user-domain:
+      suffix: ao.space
+  psplatform:
+    url: https://services.eulix.xyz
+  account:
+    url: http://localhost:8080
+    invite:
+      maxmemberlimit: ${MAX_INVITE_MEMBER_COUNT:9}
+      expirationsec: 86400
+      param: /member/accept?subdomain=%s&invitecode=%s&keyfingerprint=%s&account=%s&member=%s&create=%d&expire=%d
+    image:
+      location: /opt/eulixspace/image/
+    data:
+      location: /opt/eulixspace/data/
+    subdomain:
+      edit:
+        limit: # 域名编辑限制的时间和次数 每 year 年 mouth 月 day 天 hours 小时 minutes 分钟 times 次
+          years: 1
+          mouths: 0
+          days: 0
+          hours: 0
+          minutes: 0
+          times: 1
+  system-agent:
+    url:
+      base: http://172.17.0.1:5680/agent/v1/api
+    #### url: http://192.168.10.101:5680/agent/v1/api
+  file-api:
+    url: http://aospace-fileapi:2001/space/v1/api
+  radicale-api:
+    auth: root:root
+    url: http://aospace-radicale:5232
+  shared:
+    info:
+      file: /gateway/shared_info.json
+  applet:
+    location: /opt/eulixspace/applet/
+    web:
+      location: /opt/eulixspace-web/space/applet/
+    upload:
+      location: /opt/eulixspace/upload/applet/
+  ip2region:
+    location: /gateway/ip2region.db
+  push:
+    timeout: PT30S
+    mq:
+      main: push_notification
+      platform: push_notification_platform
+      client:
+        prefix: push_notification_client_
+    app:
+      activity: xyz.eulix.space.push.EulixMfrNotifyActivity
+  appstore:
+    appsign:
+      url: https://auth.dev-apps.eulix.xyz
+    appapi:
+      url: https://api.dev-apps.eulix.xyz
+  security-api:
+    url: http://172.17.0.1:9200/security/v1/api
+  deploy-api:
+    url: http://aospace-container-mgr:2878
+  vod:
+    url: http://aospace-media-vod:3001/space/v1/api/vod
+  dockerhub:
+    url: https://index.docker.io
+  internet:
+    service:
+      config: /gateway/internet_service.json
+
+deploy-api/mp-rest/connectTimeout: 1800000
+deploy-api/mp-rest/readTimeout: 1800000
+
+"%prod":
+  quarkus:
+    datasource:
+      db-kind: postgresql
+      username: postgres
+      password: postgres
+      jdbc:
+        url: jdbc:postgresql://localhost/account
+        max-size: 16
+        driver: org.postgresql.Driver
+    redis:
+      hosts: redis://aospace-redis:6379
+      password: mysecretpassword
+      timeout: 70s
+      max-pool-size: 100
+    hibernate-orm:
+      log:
+        sql: true
+    log:
+      file:
+        enable: true
+        path: /logs/gateway.log
+        rotation:
+          file-suffix: .yyyy-MM-dd
+          max-file-size: 10M
+          max-backup-index: 20
+          rotate-on-boot: false
+
+"%dev":
+  url: 127.0.0.1
+  http:
+    host: 0.0.0.0
+  quarkus:
+    http:
+      host: 0.0.0.0
+    datasource:
+      db-kind: postgresql
+    rest-client:
+      appsign-api:
+        url: https://auth.dev-apps.eulix.xyz
+      appstore-api:
+        url: https://api.dev-apps.eulix.xyz
+    system-agent:
+      url:
+        base: https://api.eulix.xyz/mock/27/agent/v1/api
+  app:
+    box:
+      uuid: 2715ddf794906f75728060b1477808ade90560f3dd2013a6ebe12cdbff544c8d
+    radicale-api:
+      auth: root:root
+      url: http://${url}:5232
+    ssplatform:
+      url: https://dev-services.eulix.xyz
+    psplatform:
+      url: https://dev-services.eulix.xyz
+    file-api:
+      url: http://192.168.124.89:2001/space/v1/api
+    deploy-api:
+      url: http://192.168.124.23:2878
+  account-api/mp-rest/url: https://api.eulix.xyz/mock/19
+#  platform-api/mp-rest/url: https://test-services.eulix.xyz/platform
+  device-storage-api/mp-rest/url: https://api.eulix.xyz/mock/27/agent/v1/api/device/info
+
+  radicale-api/mp-rest/url: ${APP_RADICALEAPI_URL:${app.radicale-api.url}}
+  radicale-api/mp-rest/scope: javax.inject.Singleton
+
+  appsign-api/mp-rest/url: https://auth.dev-apps.eulix.xyz
+  appsign-api/mp-rest/scope: javax.inject.Singleton
+
+  appstore-api/mp-rest/url: https://api.dev-apps.eulix.xyz
+  appstore-api/mp-rest/scope: javax.inject.Singleton
+
+  deploy-api/mp-rest/url: ${APP_DEPLOY_API_URL:${app.deploy-api.url}}
+  deploy-api/mp-rest/scope: javax.inject.Singleton
+
+
+"%test":
+  quarkus:
+    http:
+      host: 0.0.0.0
+    datasource:
+      db-kind: h2
+    log:
+      file:
+        path: ./target/logs/gateway.log
+  app:
+    gateway:
+      file:
+        system:
+          location: /gateway/
+    account:
+      data:
+        location: ./target/opt/eulixspace/data/
+      image:
+        location: ./target/opt/eulixspace/image/
+    radicale-api:
+      auth: root:root
+      url: http://127.0.0.1:5232

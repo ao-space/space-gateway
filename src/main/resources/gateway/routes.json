@@ -1,0 +1,961 @@
+{
+  "version": "0.3.0",
+  "services": {
+    "eulixspace-file-service": {
+      "list_folders": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/file/list"
+      },
+      "delete_file": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/file/delete"
+      },
+      "upload_file": {
+        "type": "upload",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/file/upload"
+      },
+      "download_file": {
+        "type": "download",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/file/download"
+      },
+      "modify_file": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/file/rename"
+      },
+      "move_file": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/file/move"
+      },
+      "copy_file": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/file/copy"
+      },
+      "file_info": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/file/info"
+      },
+      "create_folder": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/folder/create"
+      },
+      "folder_info": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/folder/info"
+      },
+      "list_recycled": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/recycled/list"
+      },
+      "restore_recycled": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/recycled/restore"
+      },
+      "clear_recycled": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/recycled/clear"
+      },
+      "search_files": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/file/search"
+      },
+      "get_syncfolder": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/sync/folder"
+      },
+      "create_syncfolder": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/sync/create"
+      },
+      "get_changedfiles": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/sync/synced"
+      },
+      "backup_start": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/backup/start"
+      },
+      "backup_info": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/backup/info"
+      },
+      "backup_stop": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/backup/stop"
+      },
+      "backup_mode": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/backup/mode"
+      },
+      "backup_hint": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/backup/hint"
+      },
+      "backup_id": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/backup/lastid"
+      },
+      "restore_start": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/restore/start"
+      },
+      "restore_info": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/restore/info"
+      },
+      "restore_stop": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/restore/stop"
+      },
+      "restore_id": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/restore/lastid"
+      },
+      "backup_mount": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/backup/mount"
+      },
+      "restore_source": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/restore/source"
+      },
+      "restore_user": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/restore/user"
+      },
+      "get_headimage": {
+        "type": "download",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/restore/head"
+      },
+      "multipart_create": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/multipart/create"
+      },
+      "multipart_delete": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/multipart/delete"
+      },
+      "multipart_list": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/multipart/list"
+      },
+      "multipart_upload": {
+        "type": "upload",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/multipart/upload",
+        "ext-protocol": "onepart"
+      },
+      "multipart_complete": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/multipart/complete"
+      },
+      "share_genlink":{
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/share/link"
+      },
+      "share_history":{
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/share/history"
+      },
+      "share_detail":{
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/share/detail"
+      },
+      "share_again":{
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/share/again"
+      },
+      "share_cancel":{
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/share/cancel"
+      },
+      "share_ownfilelist":{
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/share/own/filelist"
+      },      
+      "album_info":{
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/album/list"
+      },
+      "album_thumbs":{
+        "type": "download",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/album/thumbs"
+      },     
+      "album_timelineframe":{
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/album/timelineframe"
+      },
+      "album_timeline_elems":{
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/album/timelines"
+      },
+      "album_timeline_increment":{
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/album/timeline/increment"
+      },
+      "album_create":{
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/album/create"
+      },
+      "album_delete":{
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/album/delete"
+      },
+      "album_modify":{
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/album/modify"
+      },
+      "album_addphoto":{
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/album/photo/add"
+      },
+      "album_deletephoto":{
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/album/photo/delete"
+      },
+      "album_likephoto":{
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/album/photo/like"
+      },
+      "album_collection":{
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/album/collections"
+      },
+      "album_todayinhis":{
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/album/todayinhis/banner"
+      },
+      "album_search":{
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/album/search"
+      },
+      "async_task_info":{
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/async/task"
+      }
+    },
+    "eulixspace-filepreview-service": {
+      "download_compressed": {
+        "type": "download",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/file/compressed"
+      },
+      "download_thumbnails": {
+        "type": "download",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/file/thumb"
+      },
+      "download_preview": {
+        "type": "download",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://aospace-fileapi:2001/space/v1/api/file/preview"
+      }
+    },
+    "eulixspace-account-service": {
+      "status": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/status"
+      },
+      "get_user": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/user"
+      },
+      "storageinfo_show": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/device/storage/info"
+      },
+      "device_hardware_info": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/device/hardware/info"
+      },
+      "setting_info": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/device/setting/info"
+      },
+      "image_show": {
+        "type": "download",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/personal/image",
+        "open-api": {
+          "scope": "userinfo_read",
+          "rate_limit": 5
+        }
+      },
+      "image_update": {
+        "type": "upload",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/personal/image/update"
+      },
+      "personalinfo_show": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/personal/info",
+        "open-api": {
+          "scope": "userinfo_read",
+          "rate_limit": 5
+        }
+      },
+      "personalinfo_update": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/personal/info/update"
+      },
+      "invite_member": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/admin/invite"
+      },
+      "delete_member": {
+        "type": "call",
+        "method": "DELETE",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/member/delete"
+      },
+      "member_list": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/member/list"
+      },
+      "member_used_storage": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/member/used/storage"
+      },
+      "member_name_update": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/member/name/update"
+      },
+      "personal_info_update": {
+        "type": "call",
+        "method": "PUT",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/personal/info"
+      },
+      "terminal_info_show": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/terminal/info"
+      },
+      "terminal_info_all_show": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/terminal/all/info"
+      },
+      "terminal_info_delete": {
+        "type": "call",
+        "method": "DELETE",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/terminal/info/delete"
+      },
+      "terminal_logout": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/terminal/logout"
+      },
+      "terminal_info_delete_ios": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/terminal/info/delete"
+      },
+      "notification_get_all": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/notification/all"
+      },
+      "notification_get": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/notification"
+      },
+      "notification_delete_all": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/notification/all/delete"
+      },
+      "notification_delete": {
+        "type": "call",
+        "method": "DELETE",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/notification"
+      },
+      "notification_set_read": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/notification/set/read"
+      },
+      "update_domain": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/personal/domain/update"
+      },
+      "security_passwd_verify": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/security/passwd/verify"
+      },
+      "security_passwd_modify_binder": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/security/passwd/modify/binder"
+      },
+      "security_passwd_reset_binder": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/security/passwd/reset/binder"
+      },
+      "security_passwd_modify_auther_apply": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/security/passwd/modify/auther/apply"
+      },
+      "security_passwd_modify_binder_accept": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/security/passwd/modify/binder/accept"
+      },
+      "security_passwd_modify_auther": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/security/passwd/modify/auther"
+      },
+      "security_passwd_reset_auther_apply": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/security/passwd/reset/auther/apply"
+      },
+      "security_passwd_reset_binder_accept": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/security/passwd/reset/binder/accept"
+      },
+      "security_passwd_reset_auther": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/security/passwd/reset/auther"
+      },
+
+      "security_email_configurations": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/security/email/configurations"
+      },
+      "security_email_setting": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/security/email/setting"
+      },
+      "security_email_verify": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/security/email/verify"
+      },
+      "security_email_set_binder": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/security/email/set/binder"
+      },
+      "security_email_modify_binder": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/security/email/modify/binder"
+      },
+      "security_email_set_auther": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/security/email/set/auther"
+      },
+      "security_email_modify_auther": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/security/email/modify/auther"
+      },
+      "security_message_poll": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/security/message/poll"
+      },
+      "admin_get_dev-options_switch": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/admin/dev-options/switch"
+      },
+      "admin_update_dev-options_switch": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/admin/dev-options/switch"
+      },
+      "auth_totp_bkey": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/auth/totp/bkey"
+      },
+      "auth_totp_auth-code": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/auth/totp/auth-code"
+      },
+      "auth_totp_secret_generate": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/auth/totp/secret/generate"
+      },
+      "auth_totp_bkey_poll": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/auth/totp/bkey/poll"
+      },
+      "auth_totp_bkey_verify": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/auth/totp/bkey/verify"
+      },
+      "auth_totp_authenticator_status": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/auth/totp/authenticator/status"
+      },
+      "auth_totp_secret": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/auth/totp/secret"
+      },
+      "auth_totp_auth-code_verify": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/auth/totp/auth-code/verify"
+      }
+    },
+    "eulixspace-gateway-service": {
+      "status": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/status"
+      }
+    },
+    "eulixspace-agent-service": {
+      "device_version": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://{{aospace-all-in-one}}:5680/agent/v1/api/device/version"
+      },
+      "device_ability": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://{{aospace-all-in-one}}:5680/agent/v1/api/device/ability"
+      },
+      "localips": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://{{aospace-all-in-one}}:5680/agent/v1/api/device/localips"
+      },
+      "netconfig": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://{{aospace-all-in-one}}:5680/agent/v1/api/device/netconfig"
+      },
+      "netconfigsetting": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://{{aospace-all-in-one}}:5680/agent/v1/api/device/netconfig"
+      },
+      "get_upgrade_config": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://{{aospace-all-in-one}}:5680/agent/v1/api/upgrade/config"
+      },
+      "set_upgrade_config": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://{{aospace-all-in-one}}:5680/agent/v1/api/upgrade/config"
+      },
+      "disk_initialize": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://{{aospace-all-in-one}}:5680/agent/v1/api/disk/initialize"
+      },
+      "disk_initialize_progress": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://{{aospace-all-in-one}}:5680/agent/v1/api/disk/initialize/progress"
+      },
+      "disk_management_expand": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://{{aospace-all-in-one}}:5680/agent/v1/api/disk/management/expand"
+      },
+      "disk_management_expand_progress": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://{{aospace-all-in-one}}:5680/agent/v1/api/disk/management/expand/progress"
+      },
+      "disk_management_list": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://{{aospace-all-in-one}}:5680/agent/v1/api/disk/management/list"
+      },
+      "disk_management_raid_info": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://{{aospace-all-in-one}}:5680/agent/v1/api/disk/management/raid/info"
+      },
+      "network_config_update": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://{{aospace-all-in-one}}:5680/agent/v1/api/network/config"
+      },
+      "network_config": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://{{aospace-all-in-one}}:5680/agent/v1/api/network/config"
+      },
+      "network_ignore": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://{{aospace-all-in-one}}:5680/agent/v1/api/network/ignore"
+      },
+      "system_reboot": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://{{aospace-all-in-one}}:5680/agent/v1/api/system/reboot"
+      },
+      "system_shutdown": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://{{aospace-all-in-one}}:5680/agent/v1/api/system/shutdown"
+      },
+      "internet_service_config": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://{{aospace-all-in-one}}:5680/agent/v1/api/bind/internet/service/config"
+      },
+      "internet_service_get_config": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://{{aospace-all-in-one}}:5680/agent/v1/api/bind/internet/service/config"
+      },
+      "upgrade_start_down": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://{{aospace-all-in-one}}:5680/agent/v1/api/upgrade/download"
+      },
+      "upgrade_start_upgrade": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://{{aospace-all-in-one}}:5680/agent/v1/api/upgrade/install"
+      },
+      "upgrade_status": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://{{aospace-all-in-one}}:5680/agent/v1/api/upgrade/status"
+      },
+      "get_lan_cert": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://{{aospace-all-in-one}}:5680/agent/v1/api/cert/get"
+      },
+      "led_switch": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://{{aospace-all-in-one}}:5680/agent/v1/api/device/led/switch"
+      },
+      "disk_sleep": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://{{aospace-all-in-one}}:5680/agent/v1/api/device/disk/sleep"
+      },
+      "disk_test": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://{{aospace-all-in-one}}:5680/agent/v1/api/device/disk/test"
+      },
+      "auto_power_on": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://{{aospace-all-in-one}}:5680/agent/v1/api/device/power/auto-on"
+      },
+      "power_timer": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://{{aospace-all-in-one}}:5680/agent/v1/api/device/power/timer"
+      },
+      "ups_set": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "http://{{aospace-all-in-one}}:5680/agent/v1/api/device/ups/set"
+      },
+      "hardware_settings": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://{{aospace-all-in-one}}:5680/agent/v1/api/device/settings"
+      },
+      "stats_cpumem": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://{{aospace-all-in-one}}:5680/agent/v1/api/device/stats/cpumem"
+      },
+      "stats_traffic": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://{{aospace-all-in-one}}:5680/agent/v1/api/device/stats/traffic"
+      },
+      "disk_status": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://{{aospace-all-in-one}}:5680/agent/v1/api/device/disk/status"
+      },
+      "disk_report": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://{{aospace-all-in-one}}:5680/agent/v1/api/device/disk/report"
+      },
+      "get_did_document": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://{{aospace-all-in-one}}:5680/agent/v1/api/did/document"
+      },
+      "update_did_document_password": {
+        "type": "call",
+        "method": "PUT",
+        "protocol": "HTTP",
+        "url": "http://{{aospace-all-in-one}}:5680/agent/v1/api/did/document/password"
+      },
+      "update_did_document_method": {
+        "type": "call",
+        "method": "PUT",
+        "protocol": "HTTP",
+        "url": "http://{{aospace-all-in-one}}:5680/agent/v1/api/did/document/method"
+      }
+    },
+    "eulixspace-platform-service": {
+      "device_register": {
+        "type": "call",
+        "method": "POST",
+        "protocol": "HTTP",
+        "url": "/v2/platform/device/register"
+      }
+    },
+    "aospace-media-vod-service": {
+      "m3u8_file": {
+        "type": "download",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/vod/m3u8"
+      },
+      "check": {
+        "type": "call",
+        "method": "GET",
+        "protocol": "HTTP",
+        "url": "http://localhost:8080/space/v1/api/vod/check"
+      }
+    }
+
+  }
+}
+

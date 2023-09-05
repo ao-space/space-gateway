@@ -1,0 +1,112 @@
+{
+  "version": "1.0.0",
+  "configurations": {
+    "qq.com": {
+      "infos" : {
+        "provider": "QQ 邮箱"
+      },
+      "servers": {
+        "smtp": {
+          "host": "smtp.qq.com",
+          "port": "465",
+          "sslEnable": true
+        },
+        "pop3": {
+          "host": "pop.qq.com",
+          "port": "995",
+          "sslEnable": true
+        }
+      }
+    },
+
+    "gmail.com": {
+      "infos": {
+        "provider": "Gmail"
+      },
+      "servers": {
+        "smtp": {
+          "host": "smtp.gmail.com",
+          "port": "587",
+          "sslEnable": false
+        },
+        "pop3": {
+          "host": "pop.gmail.com",
+          "port": "995",
+          "sslEnable": true
+        }
+      }
+    },
+
+    "163.com": {
+      "infos": {
+        "provider": "163邮箱"
+      },
+      "servers": {
+        "smtp": {
+          "host": "smtp.163.com",
+          "port": "465",
+          "sslEnable": true
+        },
+        "pop3": {
+          "host": "pop.163.com",
+          "port": "995",
+          "sslEnable": true
+        }
+      }
+    },
+
+    "126.com": {
+      "infos": {
+        "provider": "126邮箱"
+      },
+      "servers": {
+        "smtp": {
+          "host": "smtp.126.com",
+          "port": "587",
+          "sslEnable": true
+        },
+        "pop3": {
+          "host": "pop.126.com",
+          "port": "995",
+          "sslEnable": true
+        }
+      }
+    },
+
+    "office365.com": {
+      "infos": {
+        "provider": "Exchange"
+      },
+      "servers": {
+        "smtp": {
+          "host": "smtp.office365.com",
+          "port": "587",
+          "sslEnable": false
+        },
+        "pop3": {
+          "host": "outlook.office365.com",
+          "port": "995",
+          "sslEnable": true
+        }
+      }
+    },
+
+    "outlook.com": {
+      "infos": {
+        "provider": "Outlook"
+      },
+      "servers": {
+        "smtp": {
+          "host": "smtp.office365.com",
+          "port": "587",
+          "sslEnable": false
+        },
+        "pop3": {
+          "host": "pop3.live.com",
+          "port": "995",
+          "sslEnable": true
+        }
+      }
+    }
+  }
+}
