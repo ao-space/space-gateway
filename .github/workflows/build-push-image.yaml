@@ -170,7 +170,7 @@ jobs:
 
       - name: Build and push Docker image
         id: build-and-push 
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v4.2.1
         with:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
@@ -181,9 +181,10 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           file: Dockerfile.jvm
+          provenance: false
 
   build-native-images:
-    runs-on: [self-hosted, linux, x64]
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
@@ -305,7 +306,7 @@ jobs:
 
       - name: Build and push Docker image
         id: build-and-push 
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v4.2.1
         with:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
@@ -316,3 +317,4 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           file: Dockerfile
+          provenance: false
