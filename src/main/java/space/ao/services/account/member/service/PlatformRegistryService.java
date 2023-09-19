@@ -23,6 +23,10 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response.Status;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
+import org.example.authentication.model.ObtainBoxRegKeyResponse;
+import org.example.client.Client;
+import org.example.domain.errorHandle.ApiResponse;
+import org.example.register.model.RegisterUserResponse;
 import org.jboss.logging.Logger;
 import space.ao.services.account.member.dto.PlatformInfo;
 import space.ao.services.account.support.service.ServiceError;
@@ -31,6 +35,7 @@ import space.ao.services.config.ApplicationProperties;
 import space.ao.services.support.OperationUtils;
 import space.ao.services.support.StringUtils;
 import space.ao.services.support.log.Logged;
+import space.ao.services.support.platform.PlatformClient;
 import space.ao.services.support.platform.PlatformRegistryServiceRestClient;
 import space.ao.services.support.platform.PlatformUtils;
 import space.ao.services.support.platform.info.registry.*;
@@ -40,6 +45,8 @@ import space.ao.services.support.platform.temp.TempRegistryInfoRepository;
 
 import java.net.URI;
 import java.time.OffsetDateTime;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 @ApplicationScoped
@@ -54,6 +61,9 @@ public class PlatformRegistryService {
   @Inject
   TempRegistryInfoRepository tempRegistryInfoRepository;
   static final Logger LOG = Logger.getLogger("app.log");
+
+  @Inject
+  PlatformClient platformClient;
 
   @Inject
   @RestClient
@@ -89,10 +99,12 @@ public class PlatformRegistryService {
    **/
   @Logged
   @Transactional
-  public UserRegistryResult registryUser(String requestId, UserRegistryInfo userRegistryInfo, Boolean platformRegistry) {
+  public UserRegistryResult registryUser(String requestId, UserRegistryInfo userRegistryInfo, Boolean platformRegistry) throws Exception {
     if (Boolean.TRUE.equals(platformRegistry) && platformUtils.isRegistryPlatformAvailable(requestId)) {
-      var boxRegKey = platformUtils.createRegistryBoxRegKey(requestId);
-      return platformRegistryServiceRestClient.platformRegistryUser(userRegistryInfo, requestId, boxRegKey, properties.boxUuid());
+      String boxRegKey = platformClient.obtainBoxRegKey(requestId);
+      if (boxRegKey != null) {
+        return platformClient.registerUser(requestId, userRegistryInfo, boxRegKey);
+      }
     } else {
       TempRegistryInfoEntity tempRegistryInfoEntity = new TempRegistryInfoEntity();
       tempRegistryInfoEntity.setRequestId(requestId);
@@ -105,7 +117,7 @@ public class PlatformRegistryService {
       LOG.warnv("registry user failed, Unable to connect to the platform, delay registration to connectable platform, userRegistryInfo: {0}", userRegistryInfo);
       return new UserRegistryResult(properties.boxUuid(), userRegistryInfo.userId(), null, RegistryTypeEnum.USER_ADMIN.getName(), userRegistryInfo.clientUUID());
     }
-
+    return null;
   }
 
   /**

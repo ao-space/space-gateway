@@ -58,7 +58,7 @@ public class TempInfoHandleService {
   UserInfoRepository userInfoRepository;
   @Scheduled(every = "2m")
   @SuppressWarnings("unused") // Executing a Scheduled Task
-  void handle() {
+  void handle() throws Exception {
     Stopwatch stopwatch = Stopwatch.createStarted();
     if(Boolean.TRUE.equals(operationUtils.getEnableInternetAccess()) && platformUtils.isRegistryPlatformAvailable(stopwatch.toString())) {
       handleTempInfo();
@@ -67,7 +67,7 @@ public class TempInfoHandleService {
   }
 
 
-  public void handleTempInfo(){
+  public void handleTempInfo() throws Exception {
     var tempInfos = tempRegistryInfoRepository.findAll(Sort.by("createAt")).list();
     for(var tempInfo : tempInfos) {
       switch (RequestTypeEnum.fromValue(tempInfo.getType())) {
@@ -95,7 +95,7 @@ public class TempInfoHandleService {
 
   @Logged
   @Transactional
-  public void registryUser(TempRegistryInfoEntity tempInfo, UserRegistryInfo userRegistryInfo){
+  public void registryUser(TempRegistryInfoEntity tempInfo, UserRegistryInfo userRegistryInfo) throws Exception {
     var userRegistryResult = platformRegistryService.registryUser(tempInfo.getRequestId(), userRegistryInfo, true);
     if (Objects.equals(tempInfo.getUserId(), Long.valueOf(Const.Admin.ADMIN_ID))){
       memberManageService.writeUserDomainToAdminFile(userRegistryResult.userDomain());

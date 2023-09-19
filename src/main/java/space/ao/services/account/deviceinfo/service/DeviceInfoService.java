@@ -105,7 +105,7 @@ public class DeviceInfoService {
   }
 
   @Transactional
-  public NetworkChannelInfo setInternetAccess(String requestId, boolean enableInternetAccess) {
+  public NetworkChannelInfo setInternetAccess(String requestId, boolean enableInternetAccess) throws Exception {
     operationUtils.loadInternetServiceConfig(requestId);
     var internetAccess = operationUtils.getEnableInternetAccess();
     if (!Objects.equals(internetAccess, enableInternetAccess)) {

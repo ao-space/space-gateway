@@ -18,6 +18,7 @@ package space.ao.services.support.platform;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.io.CharStreams;
+import io.quarkus.test.InjectMock;
 import io.quarkus.test.Mock;
 
 import java.io.IOException;
@@ -27,7 +28,14 @@ import java.util.List;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
+import org.example.authentication.model.ObtainBoxRegKeyResponse;
+import org.example.client.Client;
+import org.example.domain.errorHandle.ApiResponse;
+import org.example.register.model.RegisterUserResponse;
 import org.jboss.logging.Logger;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import space.ao.services.account.member.service.PlatformRegistryService;
 import space.ao.services.config.ApplicationProperties;
 import space.ao.services.support.OperationUtils;
 import space.ao.services.support.platform.info.ability.PlatformApiResults;
@@ -45,6 +53,9 @@ import space.ao.services.support.security.SecurityUtils;
 import space.ao.services.support.service.ServiceError;
 import space.ao.services.support.service.ServiceOperationException;
 
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
+
 @Mock
 @ApplicationScoped
 @RestClient
@@ -59,6 +70,36 @@ public class MockPlatformRegistryServiceRestClient implements PlatformRegistrySe
   OperationUtils utils;
   @Inject
   SecurityUtils securityUtils;
+
+  @Inject
+  PlatformRegistryService platformRegistryService;
+
+  @InjectMock
+  Client mockClient;
+
+  @Test
+  public void testRegistryUser() throws Exception {
+    // Given
+    String requestId = "e9993fc787d94b6c886cbaa340f9c0f4";
+    UserRegistryInfo userRegistryInfo = new UserRegistryInfo("1","","user_admin","5d5af871790b4922bca935f08109a531");
+    // ... set other properties of userRegistryInfo as needed ...
+
+    // Mock the SDK's methods
+    ObtainBoxRegKeyResponse mockObtainBoxRegKeyResponse = new ObtainBoxRegKeyResponse();
+    // ... set properties of mockObtainBoxRegKeyResponse as needed ...
+    Mockito.when(mockClient.obtainBoxRegKey(anyString(), anyList(), anyString())).thenReturn(new ApiResponse<>());
+
+    RegisterUserResponse mockRegisterUserResponse = new RegisterUserResponse();
+    // ... set properties of mockRegisterUserResponse as needed ...
+    Mockito.when(mockClient.registerUser(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(new ApiResponse<>());
+
+    // When
+    UserRegistryResult result = platformRegistryService.registryUser(requestId, userRegistryInfo, true);
+
+    // Then
+    // ... assert the expected behavior/results ...
+  }
+
   @Override
   public TokenCreateResults createTokens(TokenInfo tokenInfo, String reqId) {
     if(securityUtils.getSecurityProvider().verifySignUsingBoxPublicKey(reqId,
