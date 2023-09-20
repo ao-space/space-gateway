@@ -1,12 +1,12 @@
 package space.ao.services.support.platform;
 
+import io.github.ren2003u.authentication.model.ObtainBoxRegKeyResponse;
+import io.github.ren2003u.client.Client;
+import io.github.ren2003u.domain.errorHandle.ApiResponse;
+import io.github.ren2003u.register.model.RegisterClientResponse;
+import io.github.ren2003u.register.model.RegisterUserResponse;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import org.example.authentication.model.ObtainBoxRegKeyResponse;
-import org.example.client.Client;
-import org.example.domain.errorHandle.ApiResponse;
-import org.example.register.model.RegisterClientResponse;
-import org.example.register.model.RegisterUserResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import space.ao.services.config.ApplicationProperties;
