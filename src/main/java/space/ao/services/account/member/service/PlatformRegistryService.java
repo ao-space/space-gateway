@@ -99,12 +99,9 @@ public class PlatformRegistryService {
    **/
   @Logged
   @Transactional
-  public UserRegistryResult registryUser(String requestId, UserRegistryInfo userRegistryInfo, Boolean platformRegistry) throws Exception {
+  public UserRegistryResult registryUser(String requestId, UserRegistryInfo userRegistryInfo, Boolean platformRegistry) {
     if (Boolean.TRUE.equals(platformRegistry) && platformUtils.isRegistryPlatformAvailable(requestId)) {
-      String boxRegKey = platformClient.obtainBoxRegKey(requestId);
-      if (boxRegKey != null) {
-        return platformClient.registerUser(requestId, userRegistryInfo, boxRegKey);
-      }
+      return platformClient.registerUser(requestId, userRegistryInfo);
     } else {
       TempRegistryInfoEntity tempRegistryInfoEntity = new TempRegistryInfoEntity();
       tempRegistryInfoEntity.setRequestId(requestId);
@@ -117,7 +114,6 @@ public class PlatformRegistryService {
       LOG.warnv("registry user failed, Unable to connect to the platform, delay registration to connectable platform, userRegistryInfo: {0}", userRegistryInfo);
       return new UserRegistryResult(properties.boxUuid(), userRegistryInfo.userId(), null, RegistryTypeEnum.USER_ADMIN.getName(), userRegistryInfo.clientUUID());
     }
-    return null;
   }
 
   /**

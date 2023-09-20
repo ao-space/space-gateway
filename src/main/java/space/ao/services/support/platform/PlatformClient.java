@@ -12,6 +12,8 @@ import space.ao.services.config.ApplicationProperties;
 import space.ao.services.support.platform.info.registry.UserRegistryInfo;
 import space.ao.services.support.platform.info.registry.UserRegistryResult;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @ApplicationScoped
@@ -24,26 +26,25 @@ public class PlatformClient {
     private final Client client;
     private static final Logger LOG = LoggerFactory.getLogger(PlatformClient.class);
 
+    // Cache variables
+    private String cachedBoxRegKey = null;
+    private LocalDateTime lastFetchedTime = null;
+    private static final Duration CACHE_DURATION = Duration.ofMinutes(5); // Cache duration of 5 minutes
+
     public PlatformClient() {
         this.client = new Client(host, null);
     }
 
-    public String obtainBoxRegKey(String requestId) {
+    public UserRegistryResult registerUser(String requestId, UserRegistryInfo userRegistryInfo) {
         try {
-            ApiResponse<ObtainBoxRegKeyResponse> response = client.obtainBoxRegKey(properties.boxUuid(), List.of("10001"), requestId);
-            if (response.getError() != null) {
-                LOG.error("Error obtaining BoxRegKey: {}", response.getError().getMessage());
+            // Obtain BoxRegKey
+            String boxRegKey = obtainBoxRegKey(requestId);
+            if (boxRegKey == null) {
+                LOG.error("Failed to obtain BoxRegKey for requestId: {}", requestId);
                 return null;
             }
-            return response.getData().getTokenResults().get(0).getBoxRegKey();
-        } catch (Exception e) {
-            LOG.error("Failed to obtain BoxRegKey", e);
-            return null;
-        }
-    }
 
-    public UserRegistryResult registerUser(String requestId, UserRegistryInfo userRegistryInfo, String boxRegKey) {
-        try {
+            // Register User
             ApiResponse<RegisterUserResponse> response = client.registerUser(properties.boxUuid(), userRegistryInfo.userId(), userRegistryInfo.subdomain(), userRegistryInfo.userType(), userRegistryInfo.clientUUID(), requestId, boxRegKey);
             if (response.getError() != null) {
                 LOG.error("Error registering user: {}", response.getError().getMessage());
@@ -52,6 +53,30 @@ public class PlatformClient {
             return new UserRegistryResult(response.getData().getBoxUUID(), response.getData().getUserId(), response.getData().getUserDomain(), response.getData().getUserType(), response.getData().getClientUUID());
         } catch (Exception e) {
             LOG.error("Failed to register user", e);
+            return null;
+        }
+    }
+
+    private String obtainBoxRegKey(String requestId) {
+        try {
+            // Check if the cache is still valid
+            if (cachedBoxRegKey != null && lastFetchedTime != null && Duration.between(lastFetchedTime, LocalDateTime.now()).compareTo(CACHE_DURATION) <= 0) {
+                return cachedBoxRegKey;
+            }
+
+            ApiResponse<ObtainBoxRegKeyResponse> response = client.obtainBoxRegKey(properties.boxUuid(), List.of("10001"), requestId);
+            if (response.getError() != null) {
+                LOG.error("Error obtaining BoxRegKey: {}", response.getError().getMessage());
+                return null;
+            }
+
+            // Update cache
+            cachedBoxRegKey = response.getData().getTokenResults().get(0).getBoxRegKey();
+            lastFetchedTime = LocalDateTime.now();
+
+            return cachedBoxRegKey;
+        } catch (Exception e) {
+            LOG.error("Failed to obtain BoxRegKey", e);
             return null;
         }
     }
