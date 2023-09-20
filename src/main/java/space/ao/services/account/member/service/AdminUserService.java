@@ -74,7 +74,7 @@ public class AdminUserService {
   }
 
   @Transactional
-  public AdminBindResult createAdmin(String requestId, AdminBindInfo adminBindInfo) throws Exception {
+  public AdminBindResult createAdmin(String requestId, AdminBindInfo adminBindInfo)  {
     var userEntityAdmin = userInfoRepository.findByRole(UserEntity.Role.ADMINISTRATOR);
     if(Objects.isNull(userEntityAdmin)){
       userEntityAdmin = bindAdminUser(requestId, adminBindInfo);
@@ -103,7 +103,7 @@ public class AdminUserService {
    * 初次绑定
    */
   @Logged
-  public UserEntity bindAdminUser(String requestId, AdminBindInfo adminBindInfo) throws Exception {
+  public UserEntity bindAdminUser(String requestId, AdminBindInfo adminBindInfo)  {
     var userEntity = new UserEntity();
 
     var userRegistryResult = platformRegistryService.registryUser(requestId, UserRegistryInfo.of(Const.Admin.ADMIN_AOID, null,

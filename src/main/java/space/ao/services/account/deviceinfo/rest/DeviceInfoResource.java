@@ -109,7 +109,7 @@ public class DeviceInfoResource{
   public ResponseBase<NetworkChannelInfo> setNetworkChannel(@Valid @NotBlank @HeaderParam("Request-Id") String requestId,
                                                             @Schema(description = "前端调用不需要加") @Valid @NotBlank @QueryParam("userId") String userId,
                                                             @Schema(description = "前端调用不需要加") @Valid @NotBlank @QueryParam(AccessToken.AK_CLIENT_UUID)  String clientUUid,
-                                                            WanChannelSettingInfo wanChannelSettingInfo) throws Exception {
+                                                            WanChannelSettingInfo wanChannelSettingInfo) {
     var userEntity = memberManageService.findByUserId(userId);
     if (userEntity.getRole() == UserEntity.Role.ADMINISTRATOR && Objects.equals(clientUUid, userEntity.getClientUUID())) {
       var networkChannelInfo = deviceInfoService.setInternetAccess(requestId, wanChannelSettingInfo.wan());

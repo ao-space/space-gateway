@@ -67,7 +67,7 @@ public class TempInfoHandleService {
   }
 
 
-  public void handleTempInfo() throws Exception {
+  public void handleTempInfo()  {
     var tempInfos = tempRegistryInfoRepository.findAll(Sort.by("createAt")).list();
     for(var tempInfo : tempInfos) {
       switch (RequestTypeEnum.fromValue(tempInfo.getType())) {
@@ -95,7 +95,7 @@ public class TempInfoHandleService {
 
   @Logged
   @Transactional
-  public void registryUser(TempRegistryInfoEntity tempInfo, UserRegistryInfo userRegistryInfo) throws Exception {
+  public void registryUser(TempRegistryInfoEntity tempInfo, UserRegistryInfo userRegistryInfo)  {
     var userRegistryResult = platformRegistryService.registryUser(tempInfo.getRequestId(), userRegistryInfo, true);
     if (Objects.equals(tempInfo.getUserId(), Long.valueOf(Const.Admin.ADMIN_ID))){
       memberManageService.writeUserDomainToAdminFile(userRegistryResult.userDomain());
