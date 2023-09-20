@@ -126,9 +126,8 @@ public class PlatformRegistryService {
    **/
   @Logged
   public void platformRegistryUserReset(String requestId, String aoid) {
-    var boxRegKey = platformUtils.createRegistryBoxRegKey(requestId);
     try {
-      platformRegistryServiceRestClient.platformResetUser(requestId, boxRegKey, properties.boxUuid(), aoid);
+      platformClient.deleteUser(requestId, aoid);
     } catch (WebApplicationException e) {
       if(Objects.equals(Status.NOT_FOUND.getStatusCode(), e.getResponse().getStatusInfo().getStatusCode())){
         LOG.errorv("platform Registry User Reset: {0}", utils.getErrorInfoFromException(e));
@@ -152,10 +151,8 @@ public class PlatformRegistryService {
   @Logged
   @Transactional
   public ClientRegistryResult registryClient(String requestId, ClientRegistryInfo clientRegistryInfo, String aoid) {
-
     if(Boolean.TRUE.equals(utils.getEnableInternetAccess()) && platformUtils.isRegistryPlatformAvailable(requestId)){
-      var boxRegKey = platformUtils.createRegistryBoxRegKey(requestId);
-      return platformRegistryServiceRestClient.platformRegistryClient(clientRegistryInfo, requestId, boxRegKey, properties.boxUuid(), aoid);
+      return platformClient.registerClient(requestId, clientRegistryInfo, aoid);
     } else {
       TempRegistryInfoEntity tempRegistryInfoEntity = new TempRegistryInfoEntity();
       tempRegistryInfoEntity.setRequestId(requestId);
@@ -183,9 +180,8 @@ public class PlatformRegistryService {
   @Logged
   public void platformRegistryClientReset(String requestId, String aoid, String clientUUID) {
     if(Boolean.TRUE.equals(utils.getEnableInternetAccess()) && platformUtils.isRegistryPlatformAvailable(requestId)){
-      var boxRegKey = platformUtils.createRegistryBoxRegKey(requestId);
       try {
-        platformRegistryServiceRestClient.platformRestClient(requestId, boxRegKey, properties.boxUuid(), aoid, clientUUID);
+        platformClient.deleteClient(requestId, aoid, clientUUID);
       } catch (WebApplicationException e){
         LOG.errorv("platform Registry Client Reset: {0}", utils.getErrorInfoFromException(e));
         if(Objects.equals(Status.NOT_FOUND.getStatusCode(), e.getResponse().getStatusInfo().getStatusCode())){
