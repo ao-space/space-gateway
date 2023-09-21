@@ -16,7 +16,14 @@ name: build and push container images
 
 env:
   REGISTRY: ghcr.io
-  EULIX_REGISTRY: ${{ secrets.EULIX_REGISTRY }}
+  EULIX_REGISTRY: hub.eulix.xyz
+  HUAWEICLOUD_REGISTRY_SH: swr.cn-east-3.myhuaweicloud.com
+  HUAWEICLOUD_REGISTRY_BJ: swr.cn-north-4.myhuaweicloud.com
+  HUAWEICLOUD_REGISTRY_GZ: swr.cn-south-1.myhuaweicloud.com
+  HUAWEICLOUD_REGISTRY_HK: swr.ap-southeast-1.myhuaweicloud.com
+  HUAWEICLOUD_REGISTRY_SG: swr.ap-southeast-3.myhuaweicloud.com
+  HUAWEICLOUD_REGISTRY_AF: swr.af-south-1.myhuaweicloud.com
+  HUAWEICLOUD_REGISTRY_LA: swr.la-north-2.myhuaweicloud.com
   IMAGE_NAME: ${{ github.repository }}
   JAVA_VERSION: '17'
 
@@ -29,7 +36,7 @@ on:
 
 jobs:
   build-jvm-images:
-    runs-on: [self-hosted, linux, x64]
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
@@ -53,6 +60,9 @@ jobs:
       - name: Setup Docker buildx
         uses: docker/setup-buildx-action@v2
 
+      - run: echo "GITHUB_REPOSITORY_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
+        shell: bash
+
       - name: Inspect builder
         run: |
           echo "Name:      ${{ steps.buildx.outputs.name }}"
@@ -77,6 +87,69 @@ jobs:
           username: ${{ secrets.EULIX_REGISTRY_USERNAME }}
           password: ${{ secrets.EULIX_REGISTRY_PASSWORD }}
 
+      - name: Log into registry Docker Hub
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_REGISTRY_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_REGISTRY_PASSWORD }}
+
+      - name: Log into registry ${{ env.HUAWEICLOUD_REGISTRY_SH }}
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.HUAWEICLOUD_REGISTRY_SH }}
+          username: cn-east-3@${{ secrets.HUAWEICLOUD_USERNAME }}
+          password: ${{ secrets.HUAWEICLOUD_PASSWORD }}
+
+      - name: Log into registry ${{ env.HUAWEICLOUD_REGISTRY_BJ }}
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.HUAWEICLOUD_REGISTRY_BJ }}
+          username: cn-north-4@${{ secrets.HUAWEICLOUD_USERNAME }}
+          password: ${{ secrets.HUAWEICLOUD_PASSWORD }}
+
+      - name: Log into registry ${{ env.HUAWEICLOUD_REGISTRY_GZ }}
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.HUAWEICLOUD_REGISTRY_GZ }}
+          username: cn-south-1@${{ secrets.HUAWEICLOUD_USERNAME }}
+          password: ${{ secrets.HUAWEICLOUD_PASSWORD }}
+
+      - name: Log into registry ${{ env.HUAWEICLOUD_REGISTRY_SG }}
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.HUAWEICLOUD_REGISTRY_SG }}
+          username: ap-southeast-3@${{ secrets.HUAWEICLOUD_USERNAME }}
+          password: ${{ secrets.HUAWEICLOUD_PASSWORD }}
+
+      - name: Log into registry ${{ env.HUAWEICLOUD_REGISTRY_HK }}
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.HUAWEICLOUD_REGISTRY_HK }}
+          username: ap-southeast-1@${{ secrets.HUAWEICLOUD_USERNAME }}
+          password: ${{ secrets.HUAWEICLOUD_PASSWORD }}
+
+      - name: Log into registry ${{ env.HUAWEICLOUD_REGISTRY_AF }}
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.HUAWEICLOUD_REGISTRY_AF }}
+          username: af-south-1@${{ secrets.HUAWEICLOUD_USERNAME }}
+          password: ${{ secrets.HUAWEICLOUD_PASSWORD }}
+
+      - name: Log into registry ${{ env.HUAWEICLOUD_REGISTRY_LA }}
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.HUAWEICLOUD_REGISTRY_LA }}
+          username: la-north-2@${{ secrets.HUAWEICLOUD_USERNAME }}
+          password: ${{ secrets.HUAWEICLOUD_PASSWORD }}
+
       - name: Extract Docker metadata
         id: meta
         uses: docker/metadata-action@v2
@@ -84,25 +157,34 @@ jobs:
           images: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
             ${{ env.EULIX_REGISTRY }}/${{ env.IMAGE_NAME }}
+            aospace/${{ env.GITHUB_REPOSITORY_NAME }}
+            ${{ env.HUAWEICLOUD_REGISTRY_SH }}/${{ env.IMAGE_NAME }}
+            ${{ env.HUAWEICLOUD_REGISTRY_BJ }}/${{ env.IMAGE_NAME }}
+            ${{ env.HUAWEICLOUD_REGISTRY_GZ }}/${{ env.IMAGE_NAME }}
+            ${{ env.HUAWEICLOUD_REGISTRY_HK }}/${{ env.IMAGE_NAME }}
+            ${{ env.HUAWEICLOUD_REGISTRY_SG }}/${{ env.IMAGE_NAME }}
+            ${{ env.HUAWEICLOUD_REGISTRY_AF }}/${{ env.IMAGE_NAME }}
+            ${{ env.HUAWEICLOUD_REGISTRY_LA }}/${{ env.IMAGE_NAME }}
           flavor: |
             prefix=jvm-
 
       - name: Build and push Docker image
         id: build-and-push 
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v4.2.1
         with:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           builder: ${{ steps.buildx.outputs.name }}
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           cache-from: type=gha
           cache-to: type=gha,mode=max
           file: Dockerfile.jvm
+          provenance: false
 
   build-native-images:
-    runs-on: [self-hosted, linux, x64]
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
@@ -116,6 +198,9 @@ jobs:
       - name: Setup Docker buildx
         uses: docker/setup-buildx-action@v2
 
+      - run: echo "GITHUB_REPOSITORY_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
+        shell: bash
+
       - name: Inspect builder
         run: |
           echo "Name:      ${{ steps.buildx.outputs.name }}"
@@ -123,7 +208,7 @@ jobs:
           echo "Status:    ${{ steps.buildx.outputs.status }}"
           echo "Flags:     ${{ steps.buildx.outputs.flags }}"
           echo "Platforms: ${{ steps.buildx.outputs.platforms }}"
-      
+
       - name: Log into registry ${{ env.REGISTRY }}
         if: github.event_name != 'pull_request'
         uses: docker/login-action@v2
@@ -140,6 +225,69 @@ jobs:
           username: ${{ secrets.EULIX_REGISTRY_USERNAME }}
           password: ${{ secrets.EULIX_REGISTRY_PASSWORD }}
 
+      - name: Log into registry Docker Hub
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_REGISTRY_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_REGISTRY_PASSWORD }}
+
+      - name: Log into registry ${{ env.HUAWEICLOUD_REGISTRY_SH }}
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.HUAWEICLOUD_REGISTRY_SH }}
+          username: cn-east-3@${{ secrets.HUAWEICLOUD_USERNAME }}
+          password: ${{ secrets.HUAWEICLOUD_PASSWORD }}
+
+      - name: Log into registry ${{ env.HUAWEICLOUD_REGISTRY_BJ }}
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.HUAWEICLOUD_REGISTRY_BJ }}
+          username: cn-north-4@${{ secrets.HUAWEICLOUD_USERNAME }}
+          password: ${{ secrets.HUAWEICLOUD_PASSWORD }}
+
+      - name: Log into registry ${{ env.HUAWEICLOUD_REGISTRY_GZ }}
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.HUAWEICLOUD_REGISTRY_GZ }}
+          username: cn-south-1@${{ secrets.HUAWEICLOUD_USERNAME }}
+          password: ${{ secrets.HUAWEICLOUD_PASSWORD }}
+
+      - name: Log into registry ${{ env.HUAWEICLOUD_REGISTRY_SG }}
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.HUAWEICLOUD_REGISTRY_SG }}
+          username: ap-southeast-3@${{ secrets.HUAWEICLOUD_USERNAME }}
+          password: ${{ secrets.HUAWEICLOUD_PASSWORD }}
+
+      - name: Log into registry ${{ env.HUAWEICLOUD_REGISTRY_HK }}
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.HUAWEICLOUD_REGISTRY_HK }}
+          username: ap-southeast-1@${{ secrets.HUAWEICLOUD_USERNAME }}
+          password: ${{ secrets.HUAWEICLOUD_PASSWORD }}
+
+      - name: Log into registry ${{ env.HUAWEICLOUD_REGISTRY_AF }}
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.HUAWEICLOUD_REGISTRY_AF }}
+          username: af-south-1@${{ secrets.HUAWEICLOUD_USERNAME }}
+          password: ${{ secrets.HUAWEICLOUD_PASSWORD }}
+
+      - name: Log into registry ${{ env.HUAWEICLOUD_REGISTRY_LA }}
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.HUAWEICLOUD_REGISTRY_LA }}
+          username: la-north-2@${{ secrets.HUAWEICLOUD_USERNAME }}
+          password: ${{ secrets.HUAWEICLOUD_PASSWORD }}
+
       - name: Extract Docker metadata
         id: meta
         uses: docker/metadata-action@v2
@@ -147,10 +295,18 @@ jobs:
           images: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
             ${{ env.EULIX_REGISTRY }}/${{ env.IMAGE_NAME }}
+            aospace/${{ env.GITHUB_REPOSITORY_NAME }}
+            ${{ env.HUAWEICLOUD_REGISTRY_SH }}/${{ env.IMAGE_NAME }}
+            ${{ env.HUAWEICLOUD_REGISTRY_BJ }}/${{ env.IMAGE_NAME }}
+            ${{ env.HUAWEICLOUD_REGISTRY_GZ }}/${{ env.IMAGE_NAME }}
+            ${{ env.HUAWEICLOUD_REGISTRY_HK }}/${{ env.IMAGE_NAME }}
+            ${{ env.HUAWEICLOUD_REGISTRY_SG }}/${{ env.IMAGE_NAME }}
+            ${{ env.HUAWEICLOUD_REGISTRY_AF }}/${{ env.IMAGE_NAME }}
+            ${{ env.HUAWEICLOUD_REGISTRY_LA }}/${{ env.IMAGE_NAME }}
 
       - name: Build and push Docker image
         id: build-and-push 
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v4.2.1
         with:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
@@ -161,3 +317,4 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           file: Dockerfile
+          provenance: false
