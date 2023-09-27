@@ -5,6 +5,7 @@ import io.github.ren2003u.client.Client;
 import io.github.ren2003u.domain.errorHandle.ApiResponse;
 import io.github.ren2003u.register.model.RegisterClientResponse;
 import io.github.ren2003u.register.model.RegisterUserResponse;
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
@@ -25,8 +26,15 @@ public class PlatformClient {
     @Inject
     ApplicationProperties properties;
 
-    private final String host = properties.ssplatformUrl();
-    private final Client client;
+    private String host;
+    private Client client;
+
+    private void init() {
+        if (this.client == null) {
+            this.host = properties.ssplatformUrl();
+            this.client = new Client(host, null);
+        }
+    }
     private static final Logger LOG = LoggerFactory.getLogger(PlatformClient.class);
 
     // Cache variables
@@ -34,11 +42,12 @@ public class PlatformClient {
     private LocalDateTime lastFetchedTime = null;
     private static final Duration CACHE_DURATION = Duration.ofMinutes(5); // Cache duration of 5 minutes
 
-    public PlatformClient() {
-        this.client = new Client(host, null);
-    }
+//    public PlatformClient() {
+//        this.client = new Client(host, null);
+//    }
 
     public UserRegistryResult registerUser(String requestId, UserRegistryInfo userRegistryInfo) {
+        init();
         try {
             // Obtain BoxRegKey
             String boxRegKey = obtainBoxRegKey(requestId);

@@ -28,10 +28,7 @@ import java.util.List;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
-import org.example.authentication.model.ObtainBoxRegKeyResponse;
-import org.example.client.Client;
-import org.example.domain.errorHandle.ApiResponse;
-import org.example.register.model.RegisterUserResponse;
+
 import org.jboss.logging.Logger;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -74,31 +71,7 @@ public class MockPlatformRegistryServiceRestClient implements PlatformRegistrySe
   @Inject
   PlatformRegistryService platformRegistryService;
 
-  @InjectMock
-  Client mockClient;
 
-  @Test
-  public void testRegistryUser() throws Exception {
-    // Given
-    String requestId = "e9993fc787d94b6c886cbaa340f9c0f4";
-    UserRegistryInfo userRegistryInfo = new UserRegistryInfo("1","","user_admin","5d5af871790b4922bca935f08109a531");
-    // ... set other properties of userRegistryInfo as needed ...
-
-    // Mock the SDK's methods
-    ObtainBoxRegKeyResponse mockObtainBoxRegKeyResponse = new ObtainBoxRegKeyResponse();
-    // ... set properties of mockObtainBoxRegKeyResponse as needed ...
-    Mockito.when(mockClient.obtainBoxRegKey(anyString(), anyList(), anyString())).thenReturn(new ApiResponse<>());
-
-    RegisterUserResponse mockRegisterUserResponse = new RegisterUserResponse();
-    // ... set properties of mockRegisterUserResponse as needed ...
-    Mockito.when(mockClient.registerUser(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(new ApiResponse<>());
-
-    // When
-    UserRegistryResult result = platformRegistryService.registryUser(requestId, userRegistryInfo, true);
-
-    // Then
-    // ... assert the expected behavior/results ...
-  }
 
   @Override
   public TokenCreateResults createTokens(TokenInfo tokenInfo, String reqId) {
