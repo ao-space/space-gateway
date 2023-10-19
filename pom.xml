@@ -45,6 +45,23 @@
   </dependencyManagement>
   <dependencies>
     <dependency>
+      <groupId>io.github.ren2003u</groupId>
+      <artifactId>platform-sdk-java</artifactId>
+      <version>1.0.3</version>
+    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>io.github.ren2003u</groupId>-->
+<!--      <artifactId>platform-sdk-java</artifactId>-->
+<!--      <version>1.0.2</version>-->
+<!--    </dependency>-->
+    <!-- Mockito core dependency -->
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>3.11.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-smallrye-openapi</artifactId>
     </dependency>

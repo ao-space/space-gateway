@@ -18,6 +18,7 @@ package space.ao.services.support.platform;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.io.CharStreams;
+import io.quarkus.test.InjectMock;
 import io.quarkus.test.Mock;
 
 import java.io.IOException;
@@ -27,7 +28,11 @@ import java.util.List;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
+
 import org.jboss.logging.Logger;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import space.ao.services.account.member.service.PlatformRegistryService;
 import space.ao.services.config.ApplicationProperties;
 import space.ao.services.support.OperationUtils;
 import space.ao.services.support.platform.info.ability.PlatformApiResults;
@@ -45,6 +50,9 @@ import space.ao.services.support.security.SecurityUtils;
 import space.ao.services.support.service.ServiceError;
 import space.ao.services.support.service.ServiceOperationException;
 
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
+
 @Mock
 @ApplicationScoped
 @RestClient
@@ -59,6 +67,12 @@ public class MockPlatformRegistryServiceRestClient implements PlatformRegistrySe
   OperationUtils utils;
   @Inject
   SecurityUtils securityUtils;
+
+  @Inject
+  PlatformRegistryService platformRegistryService;
+
+
+
   @Override
   public TokenCreateResults createTokens(TokenInfo tokenInfo, String reqId) {
     if(securityUtils.getSecurityProvider().verifySignUsingBoxPublicKey(reqId,

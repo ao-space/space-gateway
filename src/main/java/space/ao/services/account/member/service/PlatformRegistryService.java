@@ -31,6 +31,7 @@ import space.ao.services.config.ApplicationProperties;
 import space.ao.services.support.OperationUtils;
 import space.ao.services.support.StringUtils;
 import space.ao.services.support.log.Logged;
+import space.ao.services.support.platform.PlatformClient;
 import space.ao.services.support.platform.PlatformRegistryServiceRestClient;
 import space.ao.services.support.platform.PlatformUtils;
 import space.ao.services.support.platform.info.registry.*;
@@ -40,6 +41,8 @@ import space.ao.services.support.platform.temp.TempRegistryInfoRepository;
 
 import java.net.URI;
 import java.time.OffsetDateTime;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 @ApplicationScoped
@@ -54,6 +57,9 @@ public class PlatformRegistryService {
   @Inject
   TempRegistryInfoRepository tempRegistryInfoRepository;
   static final Logger LOG = Logger.getLogger("app.log");
+
+  @Inject
+  PlatformClient platformClient;
 
   @Inject
   @RestClient
@@ -91,8 +97,7 @@ public class PlatformRegistryService {
   @Transactional
   public UserRegistryResult registryUser(String requestId, UserRegistryInfo userRegistryInfo, Boolean platformRegistry) {
     if (Boolean.TRUE.equals(platformRegistry) && platformUtils.isRegistryPlatformAvailable(requestId)) {
-      var boxRegKey = platformUtils.createRegistryBoxRegKey(requestId);
-      return platformRegistryServiceRestClient.platformRegistryUser(userRegistryInfo, requestId, boxRegKey, properties.boxUuid());
+      return platformClient.registerUser(requestId, userRegistryInfo);
     } else {
       TempRegistryInfoEntity tempRegistryInfoEntity = new TempRegistryInfoEntity();
       tempRegistryInfoEntity.setRequestId(requestId);
@@ -105,7 +110,6 @@ public class PlatformRegistryService {
       LOG.warnv("registry user failed, Unable to connect to the platform, delay registration to connectable platform, userRegistryInfo: {0}", userRegistryInfo);
       return new UserRegistryResult(properties.boxUuid(), userRegistryInfo.userId(), null, RegistryTypeEnum.USER_ADMIN.getName(), userRegistryInfo.clientUUID());
     }
-
   }
 
   /**
@@ -118,9 +122,8 @@ public class PlatformRegistryService {
    **/
   @Logged
   public void platformRegistryUserReset(String requestId, String aoid) {
-    var boxRegKey = platformUtils.createRegistryBoxRegKey(requestId);
     try {
-      platformRegistryServiceRestClient.platformResetUser(requestId, boxRegKey, properties.boxUuid(), aoid);
+      platformClient.deleteUser(requestId, aoid);
     } catch (WebApplicationException e) {
       if(Objects.equals(Status.NOT_FOUND.getStatusCode(), e.getResponse().getStatusInfo().getStatusCode())){
         LOG.errorv("platform Registry User Reset: {0}", utils.getErrorInfoFromException(e));
@@ -144,10 +147,8 @@ public class PlatformRegistryService {
   @Logged
   @Transactional
   public ClientRegistryResult registryClient(String requestId, ClientRegistryInfo clientRegistryInfo, String aoid) {
-
     if(Boolean.TRUE.equals(utils.getEnableInternetAccess()) && platformUtils.isRegistryPlatformAvailable(requestId)){
-      var boxRegKey = platformUtils.createRegistryBoxRegKey(requestId);
-      return platformRegistryServiceRestClient.platformRegistryClient(clientRegistryInfo, requestId, boxRegKey, properties.boxUuid(), aoid);
+      return platformClient.registerClient(requestId, clientRegistryInfo, aoid);
     } else {
       TempRegistryInfoEntity tempRegistryInfoEntity = new TempRegistryInfoEntity();
       tempRegistryInfoEntity.setRequestId(requestId);
@@ -175,9 +176,8 @@ public class PlatformRegistryService {
   @Logged
   public void platformRegistryClientReset(String requestId, String aoid, String clientUUID) {
     if(Boolean.TRUE.equals(utils.getEnableInternetAccess()) && platformUtils.isRegistryPlatformAvailable(requestId)){
-      var boxRegKey = platformUtils.createRegistryBoxRegKey(requestId);
       try {
-        platformRegistryServiceRestClient.platformRestClient(requestId, boxRegKey, properties.boxUuid(), aoid, clientUUID);
+        platformClient.deleteClient(requestId, aoid, clientUUID);
       } catch (WebApplicationException e){
         LOG.errorv("platform Registry Client Reset: {0}", utils.getErrorInfoFromException(e));
         if(Objects.equals(Status.NOT_FOUND.getStatusCode(), e.getResponse().getStatusInfo().getStatusCode())){

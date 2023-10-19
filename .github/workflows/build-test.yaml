@@ -44,7 +44,7 @@ env:
 
 jobs:
   jvm-build-test:
-    runs-on: [self-hosted, linux, x64]
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
 
@@ -62,7 +62,7 @@ jobs:
             -Dmaven.compiler.release=${{ env.JAVA_VERSION }}
 
   native-build-test:
-    runs-on: [self-hosted, linux, x64]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
