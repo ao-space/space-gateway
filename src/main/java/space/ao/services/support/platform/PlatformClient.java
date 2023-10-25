@@ -35,7 +35,7 @@ public class PlatformClient {
             this.client = new Client(host, null);
         }
     }
-    private static final Logger LOG = LoggerFactory.getLogger(PlatformClient.class);
+    private static final Logger LOG = LoggerFactory.getLogger("app.log");
 
     // Cache variables
     private String cachedBoxRegKey = null;
