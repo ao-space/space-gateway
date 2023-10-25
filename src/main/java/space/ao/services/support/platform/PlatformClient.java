@@ -91,6 +91,7 @@ public class PlatformClient {
     }
 
     private String obtainBoxRegKey(String requestId) {
+        init();
         try {
             // Check if the cache is still valid
             if (cachedBoxRegKey != null && lastFetchedTime != null && Duration.between(lastFetchedTime, LocalDateTime.now()).compareTo(CACHE_DURATION) <= 0) {
