@@ -49,6 +49,8 @@ public class PlatformClient {
     public UserRegistryResult registerUser(String requestId, UserRegistryInfo userRegistryInfo) {
         init();
         try {
+            LOG.info("requestId:{}",requestId);
+            LOG.info("UserRegistryInfo:{}",userRegistryInfo);
             // Obtain BoxRegKey
             String boxRegKey = obtainBoxRegKey(requestId);
             if (boxRegKey == null) {
