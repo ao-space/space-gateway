@@ -11,13 +11,18 @@ import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import space.ao.services.config.ApplicationProperties;
+import space.ao.services.support.OperationUtils;
 import space.ao.services.support.platform.info.registry.ClientRegistryInfo;
 import space.ao.services.support.platform.info.registry.ClientRegistryResult;
 import space.ao.services.support.platform.info.registry.UserRegistryInfo;
 import space.ao.services.support.platform.info.registry.UserRegistryResult;
+import space.ao.services.support.platform.info.token.TokenVerifySignInfo;
+import space.ao.services.support.security.SecurityUtils;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.List;
 
 @ApplicationScoped
@@ -26,6 +31,11 @@ public class PlatformClient {
     @Inject
     ApplicationProperties properties;
 
+    @Inject
+    SecurityUtils securityUtils;
+
+    @Inject
+    OperationUtils utils;
     private String host;
     private Client client;
 
@@ -35,7 +45,7 @@ public class PlatformClient {
             this.client = new Client(host, null);
         }
     }
-    private static final Logger LOG = LoggerFactory.getLogger("app.log");
+    private static final Logger LOG = LoggerFactory.getLogger(PlatformClient.class);
 
     // Cache variables
     private String cachedBoxRegKey = null;
@@ -71,6 +81,7 @@ public class PlatformClient {
         }
     }
     public ClientRegistryResult registerClient(String requestId, ClientRegistryInfo clientRegistryInfo, String userId) {
+        init();
         try {
             // Obtain BoxRegKey
             String boxRegKey = obtainBoxRegKey(requestId);
@@ -99,8 +110,11 @@ public class PlatformClient {
             if (cachedBoxRegKey != null && lastFetchedTime != null && Duration.between(lastFetchedTime, LocalDateTime.now()).compareTo(CACHE_DURATION) <= 0) {
                 return cachedBoxRegKey;
             }
-
-            ApiResponse<ObtainBoxRegKeyResponse> response = client.obtainBoxRegKey(properties.boxUuid(), List.of("10001"), requestId);
+            var sign = securityUtils.getSecurityProvider().signUsingBoxPrivateKey(requestId,
+                    Base64.getEncoder().encodeToString(
+                            utils.objectToJson(TokenVerifySignInfo.of(properties.boxUuid(), List.of("10001")))
+                                    .getBytes(StandardCharsets.UTF_8)));
+            ApiResponse<ObtainBoxRegKeyResponse> response = client.obtainBoxRegKey(properties.boxUuid(), List.of("10001"), requestId,sign);
             if (response.getError() != null) {
                 LOG.error("Error obtaining BoxRegKey: {}", response.getError().getMessage());
                 return null;
@@ -117,6 +131,7 @@ public class PlatformClient {
         }
     }
     public void deleteUser(String requestId, String userId) {
+        init();
         try {
             // Obtain BoxRegKey
             String boxRegKey = obtainBoxRegKey(requestId);
@@ -132,6 +147,7 @@ public class PlatformClient {
         }
     }
     public void deleteClient(String requestId, String userId, String clientUUID) {
+        init();
         try {
             // Obtain BoxRegKey
             String boxRegKey = obtainBoxRegKey(requestId);
