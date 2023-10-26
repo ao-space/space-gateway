@@ -132,7 +132,6 @@ public class AdminUserService {
     userEntity.setClientUUID(adminBindInfo.getClientUUID());
     userEntity.setApplyEmail(adminBindInfo.getApplyEmail());
     userEntity.setPersonalName(adminBindInfo.getSpaceName());
-    //设置属性
     userEntity.setUserDomain(userRegistryResult.userDomain());
     userEntity.setAuthKey(authKey);
     userInfoRepository.insertAdminUser(userEntity);
