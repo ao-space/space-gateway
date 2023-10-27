@@ -1,10 +1,10 @@
 package space.ao.services.support.platform;
 
-import io.github.ren2003u.authentication.model.ObtainBoxRegKeyResponse;
+//import io.github.ren2003u.authentication.model.ObtainBoxRegKeyResponse;
 import io.github.ren2003u.client.Client;
 import io.github.ren2003u.domain.errorHandle.ApiResponse;
-import io.github.ren2003u.register.model.RegisterClientResponse;
-import io.github.ren2003u.register.model.RegisterUserResponse;
+//import io.github.ren2003u.register.model.RegisterClientResponse;
+//import io.github.ren2003u.register.model.RegisterUserResponse;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -17,6 +17,9 @@ import space.ao.services.support.platform.info.registry.ClientRegistryResult;
 import space.ao.services.support.platform.info.registry.UserRegistryInfo;
 import space.ao.services.support.platform.info.registry.UserRegistryResult;
 import space.ao.services.support.platform.info.token.TokenVerifySignInfo;
+import space.ao.services.support.platform.model.ObtainBoxRegKeyResponse;
+import space.ao.services.support.platform.model.RegisterClientResponse;
+import space.ao.services.support.platform.model.RegisterUserResponse;
 import space.ao.services.support.security.SecurityUtils;
 
 import java.nio.charset.StandardCharsets;
