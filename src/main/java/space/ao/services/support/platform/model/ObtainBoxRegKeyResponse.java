@@ -9,7 +9,7 @@ import java.util.List;
 public class ObtainBoxRegKeyResponse  {
 
     private String boxUUID;
-    private List<io.github.ren2003u.authentication.model.ObtainBoxRegKeyResponse.TokenResult> tokenResults = new ArrayList<>();
+    private List<TokenResult> tokenResults = new ArrayList<>();
 
     // Getters and setters with encapsulation
 
@@ -21,11 +21,11 @@ public class ObtainBoxRegKeyResponse  {
         this.boxUUID = boxUUID;
     }
 
-    public List<io.github.ren2003u.authentication.model.ObtainBoxRegKeyResponse.TokenResult> getTokenResults() {
+    public List<TokenResult> getTokenResults() {
         return new ArrayList<>(this.tokenResults);
     }
 
-    public void setTokenResults(List<io.github.ren2003u.authentication.model.ObtainBoxRegKeyResponse.TokenResult> tokenResults) {
+    public void setTokenResults(List<TokenResult> tokenResults) {
         if (tokenResults != null) {
             this.tokenResults = new ArrayList<>(tokenResults);
         }
