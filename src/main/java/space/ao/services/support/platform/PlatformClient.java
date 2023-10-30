@@ -1,6 +1,7 @@
 package space.ao.services.support.platform;
 
 //import io.github.ren2003u.authentication.model.ObtainBoxRegKeyResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.ren2003u.client.Client;
 import io.github.ren2003u.domain.errorHandle.ApiResponse;
 //import io.github.ren2003u.register.model.RegisterClientResponse;
@@ -17,9 +18,7 @@ import space.ao.services.support.platform.info.registry.ClientRegistryResult;
 import space.ao.services.support.platform.info.registry.UserRegistryInfo;
 import space.ao.services.support.platform.info.registry.UserRegistryResult;
 import space.ao.services.support.platform.info.token.TokenVerifySignInfo;
-import space.ao.services.support.platform.model.ObtainBoxRegKeyResponse;
-import space.ao.services.support.platform.model.RegisterClientResponse;
-import space.ao.services.support.platform.model.RegisterUserResponse;
+import space.ao.services.support.platform.model.*;
 import space.ao.services.support.security.SecurityUtils;
 
 import java.nio.charset.StandardCharsets;
@@ -71,8 +70,19 @@ public class PlatformClient {
                 return null;
             }
 
+            // Prepare RegisterUserRequest object
+            RegisterUserRequest request = new RegisterUserRequest();
+            request.setBoxUUID(properties.boxUuid());
+            request.setUserId(userRegistryInfo.userId());
+            request.setSubdomain(userRegistryInfo.subdomain());
+            request.setUserType(userRegistryInfo.userType());
+            request.setClientUUID(userRegistryInfo.clientUUID());
+
+            // Convert RegisterUserRequest object to JSON
+            String jsonRequest = new ObjectMapper().writeValueAsString(request);
+
             // Register User
-            ApiResponse<RegisterUserResponse> response = client.registerUser(properties.boxUuid(), userRegistryInfo.userId(), userRegistryInfo.subdomain(), userRegistryInfo.userType(), userRegistryInfo.clientUUID(), requestId, boxRegKey);
+            ApiResponse<RegisterUserResponse> response = client.registerUser(jsonRequest, requestId, boxRegKey);
             if (response.getError() != null) {
                 LOG.error("Error registering user: {}", response.getError().getMessage());
                 return null;
@@ -93,8 +103,16 @@ public class PlatformClient {
                 return null;
             }
 
+            // Prepare RegisterClientRequest object
+            RegisterClientRequest request = new RegisterClientRequest();
+            request.setClientUUID(clientRegistryInfo.clientUUID());
+            request.setClientType(clientRegistryInfo.clientType());
+
+            // Convert RegisterClientRequest object to JSON
+            String jsonRequest = new ObjectMapper().writeValueAsString(request);
+
             // Register Client
-            ApiResponse<RegisterClientResponse> response = client.registerClient(properties.boxUuid(), userId, clientRegistryInfo.clientUUID(), clientRegistryInfo.clientType(), requestId, boxRegKey);
+            ApiResponse<RegisterClientResponse> response = client.registerClient(properties.boxUuid(), userId, jsonRequest, requestId, boxRegKey);
             if (response.getError() != null) {
                 LOG.error("Error registering client: {}", response.getError().getMessage());
                 return null;
@@ -117,7 +135,16 @@ public class PlatformClient {
                     Base64.getEncoder().encodeToString(
                             utils.objectToJson(TokenVerifySignInfo.of(properties.boxUuid(), List.of("10001")))
                                     .getBytes(StandardCharsets.UTF_8)));
-            ApiResponse<ObtainBoxRegKeyResponse> response = client.obtainBoxRegKey(properties.boxUuid(), List.of("10001"), requestId,sign);
+
+            ObtainBoxRegKeyRequest request = new ObtainBoxRegKeyRequest();
+            request.setBoxUUID(properties.boxUuid());
+            request.setServiceIds(List.of("10001"));
+            request.setSign(sign);
+
+            String jsonRequest = new ObjectMapper().writeValueAsString(request);
+
+            //ApiResponse<ObtainBoxRegKeyResponse> response = client.obtainBoxRegKey(properties.boxUuid(), List.of("10001"), requestId,sign);
+            ApiResponse<ObtainBoxRegKeyResponse> response = client.obtainBoxRegKey(jsonRequest, requestId);
             if (response.getError() != null) {
                 LOG.error("Error obtaining BoxRegKey: {}", response.getError().getMessage());
                 return null;
