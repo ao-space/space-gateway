@@ -47,7 +47,7 @@
     <dependency>
       <groupId>io.github.ren2003u</groupId>
       <artifactId>platform-sdk-java</artifactId>
-      <version>1.0.4</version>
+      <version>1.0.5</version>
     </dependency>
 <!--    <dependency>-->
 <!--      <groupId>io.github.ren2003u</groupId>-->
