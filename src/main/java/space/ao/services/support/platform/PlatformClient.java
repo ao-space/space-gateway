@@ -1,11 +1,25 @@
+/*
+ * Copyright (c) 2022 Institute of Software Chinese Academy of Sciences (ISCAS)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package space.ao.services.support.platform;
 
-//import io.github.ren2003u.authentication.model.ObtainBoxRegKeyResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.ren2003u.authentication.model.ObtainBoxRegKeyResponse;
 import io.github.ren2003u.client.Client;
 import io.github.ren2003u.domain.errorHandle.ApiResponse;
-//import io.github.ren2003u.register.model.RegisterClientResponse;
-//import io.github.ren2003u.register.model.RegisterUserResponse;
+import io.github.ren2003u.register.model.RegisterClientResponse;
+import io.github.ren2003u.register.model.RegisterUserResponse;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -18,7 +32,6 @@ import space.ao.services.support.platform.info.registry.ClientRegistryResult;
 import space.ao.services.support.platform.info.registry.UserRegistryInfo;
 import space.ao.services.support.platform.info.registry.UserRegistryResult;
 import space.ao.services.support.platform.info.token.TokenVerifySignInfo;
-import space.ao.services.support.platform.model.*;
 import space.ao.services.support.security.SecurityUtils;
 
 import java.nio.charset.StandardCharsets;
@@ -70,19 +83,8 @@ public class PlatformClient {
                 return null;
             }
 
-            // Prepare RegisterUserRequest object
-            RegisterUserRequest request = new RegisterUserRequest();
-            request.setBoxUUID(properties.boxUuid());
-            request.setUserId(userRegistryInfo.userId());
-            request.setSubdomain(userRegistryInfo.subdomain());
-            request.setUserType(userRegistryInfo.userType());
-            request.setClientUUID(userRegistryInfo.clientUUID());
-
-            // Convert RegisterUserRequest object to JSON
-            String jsonRequest = new ObjectMapper().writeValueAsString(request);
-
             // Register User
-            ApiResponse<RegisterUserResponse> response = client.registerUser(jsonRequest, requestId, boxRegKey);
+            ApiResponse<RegisterUserResponse> response = client.registerUser(properties.boxUuid(), userRegistryInfo.userId(), userRegistryInfo.subdomain(), userRegistryInfo.userType(), userRegistryInfo.clientUUID(), requestId, boxRegKey);
             if (response.getError() != null) {
                 LOG.error("Error registering user: {}", response.getError().getMessage());
                 return null;
@@ -103,16 +105,8 @@ public class PlatformClient {
                 return null;
             }
 
-            // Prepare RegisterClientRequest object
-            RegisterClientRequest request = new RegisterClientRequest();
-            request.setClientUUID(clientRegistryInfo.clientUUID());
-            request.setClientType(clientRegistryInfo.clientType());
-
-            // Convert RegisterClientRequest object to JSON
-            String jsonRequest = new ObjectMapper().writeValueAsString(request);
-
             // Register Client
-            ApiResponse<RegisterClientResponse> response = client.registerClient(properties.boxUuid(), userId, jsonRequest, requestId, boxRegKey);
+            ApiResponse<RegisterClientResponse> response = client.registerClient(properties.boxUuid(), userId, clientRegistryInfo.clientUUID(), clientRegistryInfo.clientType(), requestId, boxRegKey);
             if (response.getError() != null) {
                 LOG.error("Error registering client: {}", response.getError().getMessage());
                 return null;
@@ -135,16 +129,7 @@ public class PlatformClient {
                     Base64.getEncoder().encodeToString(
                             utils.objectToJson(TokenVerifySignInfo.of(properties.boxUuid(), List.of("10001")))
                                     .getBytes(StandardCharsets.UTF_8)));
-
-            ObtainBoxRegKeyRequest request = new ObtainBoxRegKeyRequest();
-            request.setBoxUUID(properties.boxUuid());
-            request.setServiceIds(List.of("10001"));
-            request.setSign(sign);
-
-            String jsonRequest = new ObjectMapper().writeValueAsString(request);
-
-            //ApiResponse<ObtainBoxRegKeyResponse> response = client.obtainBoxRegKey(properties.boxUuid(), List.of("10001"), requestId,sign);
-            ApiResponse<ObtainBoxRegKeyResponse> response = client.obtainBoxRegKey(jsonRequest, requestId);
+            ApiResponse<ObtainBoxRegKeyResponse> response = client.obtainBoxRegKey(properties.boxUuid(), List.of("10001"), requestId,sign);
             if (response.getError() != null) {
                 LOG.error("Error obtaining BoxRegKey: {}", response.getError().getMessage());
                 return null;
