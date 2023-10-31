@@ -20,7 +20,6 @@ import io.github.ren2003u.client.Client;
 import io.github.ren2003u.domain.errorHandle.ApiResponse;
 import io.github.ren2003u.register.model.RegisterClientResponse;
 import io.github.ren2003u.register.model.RegisterUserResponse;
-import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
