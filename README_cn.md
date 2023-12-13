@@ -77,7 +77,7 @@ docker run -i --rm -p 8080:8080 native/space-gateway
 
 如果您想了解有关构建本机可执行文件的更多信息，请参阅 <https://quarkus.io/guides/maven-tooling.html> 。
 
-### 和傲空间其它服务一起运行
+### 和 AO.space 其它服务一起运行
 
 参考 [build-and-deploy](https://github.com/ao-space/ao.space/blob/dev/docs/build-and-deploy_CN.md)。
 
