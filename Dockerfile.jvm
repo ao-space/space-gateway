@@ -105,3 +105,5 @@ EXPOSE 8080
 USER root
 ENV JAVA_OPTS="-Duser.timezone=GMT+8 -Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
 ENV JAVA_APP_JAR="/deployments/quarkus-run.jar"
+
+CMD ["java", "-jar", "/deployments/quarkus-run.jar"]
