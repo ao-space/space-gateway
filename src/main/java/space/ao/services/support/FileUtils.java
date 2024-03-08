@@ -53,6 +53,9 @@ public class FileUtils {
       ZipEntry zipEntry;
       // 遍历源文件数组
       for (File srcFile : srcFiles) {
+        if(!srcFile.exists()){
+          continue;
+        }
         // 将源文件数组中的当前文件读入 FileInputStream 流中
         try(FileInputStream fileInputStream = new FileInputStream(srcFile)){
           // 实例化 ZipEntry 对象，源文件数组中的当前文件
