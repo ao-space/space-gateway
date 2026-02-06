@@ -91,15 +91,25 @@
 #   accessed directly. (example: "foo.example.com,bar.example.com")
 #
 ###
-FROM xfan1024/openeuler:23.03-light
-RUN yum -y install java-17-openjdk --disableplugin=seccomp
+FROM maven:3.9.3-eclipse-temurin-17 as builder
+
+WORKDIR /work
+COPY . .
+
+RUN mvn -Dhttps.protocols=TLSv1.2 \
+    -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN \
+    -Dorg.slf4j.simpleLogger.showDateTime=true \
+    -Djava.awt.headless=true \
+    -Dmaven.test.skip=true \
+    package
+
+FROM eclipse-temurin:17-jre
 ENV LANGUAGE='en_US:en'
 
-# We make four distinct layers so if there are application changes the library layers can be re-used
-COPY --chown=1001 target/quarkus-app/lib/ /deployments/lib/
-COPY --chown=1001 target/quarkus-app/*.jar /deployments/
-COPY --chown=1001 target/quarkus-app/app/ /deployments/app/
-COPY --chown=1001 target/quarkus-app/quarkus/ /deployments/quarkus/
+COPY --from=builder --chown=1001 /work/target/quarkus-app/lib/ /deployments/lib/
+COPY --from=builder --chown=1001 /work/target/quarkus-app/*.jar /deployments/
+COPY --from=builder --chown=1001 /work/target/quarkus-app/app/ /deployments/app/
+COPY --from=builder --chown=1001 /work/target/quarkus-app/quarkus/ /deployments/quarkus/
 
 EXPOSE 8080
 USER root

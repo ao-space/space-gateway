@@ -89,6 +89,12 @@ public class CheckPlatformStatusInterceptor {
         }
       }
       case PRODUCT -> {
+        // Simplified AOFS mode: internet access is disabled by design.
+        // Skip external product-platform probing to avoid repeated noisy warnings.
+        if (Boolean.FALSE.equals(operationUtils.getEnableInternetAccess())) {
+          LOG.debugv("Skip product platform check in simplified mode - request-id: {0}", requestId);
+          return ResponseBase.fromResponseBaseEnum(requestId, ResponseBaseEnum.PRODUCT_SERVICE_PLATFORM_ERROR).build();
+        }
         var productStatus = platformUtils.isOpstagePlatformAvailable(requestId);
         if (!productStatus) {
           return ResponseBase.fromResponseBaseEnum(requestId, ResponseBaseEnum.PRODUCT_SERVICE_PLATFORM_ERROR).build();

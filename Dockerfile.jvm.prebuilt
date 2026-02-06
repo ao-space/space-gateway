@@ -1,0 +1,16 @@
+# Runtime-only image. Requires prebuilt target/quarkus-app.
+
+FROM eclipse-temurin:17-jre
+ENV LANGUAGE='en_US:en'
+
+COPY --chown=1001 target/quarkus-app/lib/ /deployments/lib/
+COPY --chown=1001 target/quarkus-app/*.jar /deployments/
+COPY --chown=1001 target/quarkus-app/app/ /deployments/app/
+COPY --chown=1001 target/quarkus-app/quarkus/ /deployments/quarkus/
+
+EXPOSE 8080
+USER root
+ENV JAVA_OPTS="-Duser.timezone=GMT+8 -Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
+ENV JAVA_APP_JAR="/deployments/quarkus-run.jar"
+
+CMD ["java", "-jar", "-Dquarkus.http.host=0.0.0.0","/deployments/quarkus-run.jar"]
