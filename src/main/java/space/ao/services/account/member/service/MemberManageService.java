@@ -347,7 +347,7 @@ public class MemberManageService {
   @SuppressWarnings("unused") // 开机自启动，写管理员信息
   public void createAdminFile() throws IOException {
     var file = new File(properties.accountDataLocation());
-    if(file.exists() || file.mkdirs()) {
+    if(!file.exists() && !file.mkdirs()) {
       LOG.error(ServiceError.CREATE_ADMIN_INIT_FAILED);
     }
     var data = new File(properties.accountDataLocation() + ServiceDefaultVar.DEFAULT_DATA_FILE);

@@ -1,0 +1,28 @@
+# Build JVM artifacts then package runtime image.
+
+FROM maven:3.9.3-eclipse-temurin-17 as builder
+
+WORKDIR /work
+COPY . .
+
+RUN mvn -Dhttps.protocols=TLSv1.2 \
+    -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN \
+    -Dorg.slf4j.simpleLogger.showDateTime=true \
+    -Djava.awt.headless=true \
+    -Dmaven.test.skip=true \
+    package
+
+FROM eclipse-temurin:17-jre
+ENV LANGUAGE='en_US:en'
+
+COPY --from=builder --chown=1001 /work/target/quarkus-app/lib/ /deployments/lib/
+COPY --from=builder --chown=1001 /work/target/quarkus-app/*.jar /deployments/
+COPY --from=builder --chown=1001 /work/target/quarkus-app/app/ /deployments/app/
+COPY --from=builder --chown=1001 /work/target/quarkus-app/quarkus/ /deployments/quarkus/
+
+EXPOSE 8080
+USER root
+ENV JAVA_OPTS="-Duser.timezone=GMT+8 -Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
+ENV JAVA_APP_JAR="/deployments/quarkus-run.jar"
+
+CMD ["java", "-jar", "-Dquarkus.http.host=0.0.0.0","/deployments/quarkus-run.jar"]
